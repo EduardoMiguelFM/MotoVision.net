@@ -1,52 +1,135 @@
 # MotoVision - ASP.NET Core com Oracle e EF Core
 
-Este projeto é uma API RESTful desenvolvida com ASP.NET Core 8.0, Entity Framework Core e banco de dados Oracle, que gerencia o cadastro de Motos, Pátios, Usuários de Pátio e seus relacionamentos com base em status, cores e setores.
+API RESTful desenvolvida em **.NET 8**, utilizando **Clean Architecture**, **DDD** e **EF Core com Oracle**, para gerenciar **Motos, Pátios e Usuários de Pátio**.  
+Inclui **Swagger**, **AutoMapper**, **FluentValidation**, **Middleware de Erros** e **Value Objects** para regras de negócio.
+
+---
 
 ## 🛠 Tecnologias Utilizadas
-
 - ASP.NET Core 8.0
-- EF Core com Oracle
-- Swagger para documentação
+- Entity Framework Core + Oracle
 - AutoMapper
+- Swagger
+- FluentValidation
+- Clean Architecture + DDD
+
+---
+
+## 📂 Estrutura do Projeto
+src
+ ┣ 📂 Api             -> Controllers, Middleware, Validations, Program.cs
+ ┣ 📂 Application     -> DTOs, Interfaces, UseCases, Mapping
+ ┣ 📂 Domain          -> Entidades, Value Objects, Enums, Regras de Negócio
+ ┗ 📂 Infrastructure  -> DbContext, Repositories, Migrations
+
+- **Entidades Ricas**: Moto, Patio, UsuarioPatio  
+- **Agregado Raiz**: Patio (gerencia coleção de Motos)  
+- **Value Objects**: Placa (valida formato), SetorCor (define setor/cor pelo status)  
+- **Enum**: StatusMoto (DISPONIVEL, RESERVADA, etc.)  
+- **Middleware**: tratamento global de erros  
+- **FluentValidation**: validação de DTOs  
+
+---
 
 ## 📦 Entidades
 
 ### Moto
-
-| Campo       | Tipo    | Descrição                                       |
-|-------------|---------|--------------------------------------------------|
-| Id          | int     | Identificador da moto                           |
-| Modelo      | string  | Modelo da moto                                  |
-| Placa       | string  | Placa da moto                                   |
-| Status      | enum    | DISPONIVEL, RESERVADA, INDISPONIVEL, etc.       |
-| NomePatio   | string  | Nome do pátio onde está localizada              |
-| Setor       | string  | Derivado do status (ex: Setor A para DISPONIVEL)|
-| Cor         | string  | Cor derivada do status (ex: Verde para DISPONIVEL)|
+| Campo      | Tipo     | Descrição |
+|------------|----------|-----------|
+| Id         | int      | Identificador |
+| Modelo     | string   | Modelo da moto |
+| Placa      | VO       | Placa validada (7 caracteres) |
+| Status     | enum     | DISPONIVEL, RESERVADA, etc. |
+| Setor      | VO       | Definido pelo Status (A-G) |
+| Cor        | VO       | Definido pelo Status |
+| Patio      | ref      | Referência ao pátio |
 
 ### Patio
-
-| Campo | Tipo   | Descrição              |
-|-------|--------|-------------------------|
-| Id    | int    | Identificador do pátio |
-| Nome  | string | Nome do pátio          |
+| Campo | Tipo   | Descrição |
+|-------|--------|-----------|
+| Id    | int    | Identificador |
+| Nome  | string | Nome do pátio |
+| Motos | lista  | Coleção de motos (Agregado Raiz) |
 
 ### UsuarioPatio
+| Campo   | Tipo   | Descrição |
+|---------|--------|-----------|
+| Id      | int    | Identificador |
+| Nome    | string | Nome do usuário |
+| Email   | string | E-mail |
+| Funcao  | string | Função |
+| PatioId | int    | FK para Pátio |
 
-| Campo  | Tipo   | Descrição                          |
-|--------|--------|-------------------------------------|
-| Id     | int    | Identificador do usuário           |
-| Nome   | string | Nome do usuário                    |
-| Email  | string | E-mail do usuário                  |
-| Funcao | string | Função exercida no pátio           |
-| PatioId| int    | Relacionamento com o Pátio         |
+---
 
 ## 🚀 Endpoints
 
 ### MotoController
-
-- `GET /api/moto` → Lista todas as motos
-- `GET /api/moto/{id}` → Detalhes de uma moto
+- `GET /api/moto`
+- `GET /api/moto/{id}`
 - `POST /api/moto`
+- `PUT /api/moto/{id}`
+- `DELETE /api/moto/{id}`
+- `PUT /api/moto/{id}/status/{novoStatus}`
+
+### PatioController
+- `GET /api/patio`
+- `GET /api/patio/{id}`
+- `POST /api/patio`
+- `PUT /api/patio/{id}`
+- `DELETE /api/patio/{id}`
+- `GET /api/patio/setor/{setor}/contagem`
+- `GET /api/patio/moto/{placa}/status`
+- `GET /api/patio/status`
+
+### UsuarioPatioController
+- `GET /api/usuariopatio`
+- `GET /api/usuariopatio/{id}`
+- `POST /api/usuariopatio`
+- `PUT /api/usuariopatio/{id}`
+- `DELETE /api/usuariopatio/{id}`
+
+---
+
+## 🧠 Regras de Negócio
+- Moto em **SINISTRO** não pode mudar de status.
+- Placa deve ter exatamente 7 caracteres.
+- Pátio não pode ter duas motos com a mesma placa.
+- Setor e cor são derivados automaticamente do status.
+
+---
+
+## ⚙️ Execução
+
+### 1. Configurar conexão Oracle ou Sql Server etc.
+`appsettings.json`:
+{
+  "ConnectionStrings": {
+    "OracleDb": "User Id=system;Password=oracle;Data Source=//localhost:1521/XEPDB1"
+  }
+}
+
+### 2. Criar banco/tabelas
+- DEV: `EnsureCreated()` cria automaticamente se vazio.
+- Prod: usar migrations.
+
+```bash
+dotnet ef migrations add InitialCreate --startup-project src/Api --project src/Infrastructure
+dotnet ef database update --startup-project src/Api --project src/Infrastructure
+```
+
+### 3. Executar a API
+```bash
+dotnet run --project src/Api
+```
+
+Swagger: `https://localhost:5001/swagger`
+
+---
+
+## 📌 Exemplo de JSON
+
+### Criar Moto
 ```json
 {
   "modelo": "Honda Biz",
@@ -55,90 +138,13 @@ Este projeto é uma API RESTful desenvolvida com ASP.NET Core 8.0, Entity Framew
   "nomePatio": "Pátio Butantã"
 }
 ```
-- `PUT /api/moto/{id}`
-- `DELETE /api/moto/{id}`
-
-### PatioController
-
-- `GET /api/patio`
-- `GET /api/patio/{id}`
-- `POST /api/patio`
-```json
-{
-  "nome": "Pátio Butantã"
-}
-```
-- `PUT /api/patio/{id}`
-- `DELETE /api/patio/{id}`
-
-#### 🔎 Endpoints adicionais:
-
-- `GET /api/patio/setor/{setor}/contagem`
-```json
-{
-  "status": "DISPONIVEL",
-  "quantidade": 5
-}
-```
-
-- `GET /api/patio/moto/{placa}/status`
-```json
-{
-  "status": "MANUTENCAO",
-  "setor": "Setor C",
-  "cor": "Amarelo"
-}
-```
-
-- `GET /api/patio/status`
-```json
-{
-  "DISPONIVEL": 3,
-  "RESERVADA": 1,
-  "MANUTENCAO": 2,
-  "FALTA_PECA": 0,
-  "INDISPONIVEL": 1,
-  "DANOS_ESTRUTURAIS": 1,
-  "SINISTRO": 0
-}
-```
-
-## 🧠 Lógica do Setor e Cor por Status
-
-| Status             | Setor     | Cor        |
-|--------------------|-----------|------------|
-| DISPONIVEL         | Setor A   | Verde      |
-| RESERVADA          | Setor B   | Azul       |
-| MANUTENCAO         | Setor C   | Amarelo    |
-| FALTA_PECA         | Setor D   | Laranja    |
-| INDISPONIVEL       | Setor E   | Cinza      |
-| DANOS_ESTRUTURAIS  | Setor F   | Vermelho   |
-| SINISTRO           | Setor G   | Preto      |
-
-## 📂 Como Executar
-
-1. Clonar o repositório
-2. Configurar a string de conexão do Oracle no `appsettings.json`
-3. Executar as migrations:
-```bash
-dotnet ef database update
-```
-4. Iniciar a aplicação no Visual Studio com depuração
-5. Acessar o Swagger: `https://localhost:{porta}/swagger`
-
-(Atualmente está configurado com o meu banco de dados e o localhost com a porta 8080)
 
 ---
 
-
-## 👥 INTEGRANTES DO GRUPO
+## 👥 Integrantes
 - RM555871 – Eduardo Miguel Forato Monteiro  
-- RM556996 – Cícero Gabriel Oliveira Serafim
+- RM556996 – Cícero Gabriel Oliveira Serafim  
+- RM557183 - MURILLO ARI FERREIRA SANT'ANNA
 
 ---
 
-## 📌 OBSERVAÇÕES FINAIS
-
-Este é o projeto para 1 e 2 Sprint do Challenge para a Mottu
-
----
