@@ -1,55 +1,42 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Mottu.Domain.Enums;
+using Mottu.Domain.ValueObjects;
 
 namespace Mottu.Domain.Entities
 {
-    public enum MotoStatus
-    {
-        DISPONIVEL,
-        RESERVADA,
-        INDISPONIVEL,
-        MANUTENCAO,
-        FALTA_PECA,
-        DANOS_ESTRUTURAIS,
-        SINISTRO
-    }
-
     public class Moto
     {
-        public int Id { get; set; }
-        public required string Modelo { get; set; }
-        public required string Placa { get; set; }
-        public MotoStatus Status { get; set; } = MotoStatus.DISPONIVEL;
-        public int PatioId { get; set; }
-        public required Patio Patio { get; set; }
-        public string Setor => DefinirSetorPorStatus(Status);
-        public string Cor => DefinirCorPorStatus(Status);
-        public string NomePatio => Patio?.Nome ?? "";
+        public int Id { get; private set; }
+        public string Modelo { get; private set; } = default!;
+        public Placa Placa { get; private set; } = default!;
+        public StatusMoto Status { get; private set; }
+        public SetorCor SetorCor { get; private set; } = default!;
+        public int PatioId { get; private set; }
+        public Patio Patio { get; private set; } = default!;
 
-        private string DefinirSetorPorStatus(MotoStatus status) => status switch
+        private Moto() { } // EF
+        internal Moto(string modelo, Placa placa, Patio patio)
         {
-            MotoStatus.DISPONIVEL => "Setor A",
-            MotoStatus.RESERVADA => "Setor B",
-            MotoStatus.MANUTENCAO => "Setor C",
-            MotoStatus.FALTA_PECA => "Setor D",
-            MotoStatus.INDISPONIVEL => "Setor E",
-            MotoStatus.DANOS_ESTRUTURAIS => "Setor F",
-            MotoStatus.SINISTRO => "Setor G",
-            _ => "Indefinido"
-        };
+            Modelo = modelo;
+            Placa = placa;
+            Patio = patio;
+            PatioId = patio.Id;
+            DefinirStatus(StatusMoto.DISPONIVEL);
+        }
 
-        private string DefinirCorPorStatus(MotoStatus status) => status switch
+        public void DefinirStatus(StatusMoto novoStatus)
         {
-            MotoStatus.DISPONIVEL => "Verde",
-            MotoStatus.RESERVADA => "Azul",
-            MotoStatus.MANUTENCAO => "Amarelo",
-            MotoStatus.FALTA_PECA => "Laranja",
-            MotoStatus.INDISPONIVEL => "Cinza",
-            MotoStatus.DANOS_ESTRUTURAIS => "Vermelho",
-            MotoStatus.SINISTRO => "Preto",
-            _ => "Indefinida"
-        };
+            if (Status == StatusMoto.SINISTRO && novoStatus != StatusMoto.SINISTRO)
+                throw new InvalidOperationException("Moto em SINISTRO não pode mudar de status.");
+
+            Status = novoStatus;
+            SetorCor = SetorCor.FromStatus(novoStatus);
+        }
+
+        public void MoverPara(Patio novoPatio)
+        {
+            if (novoPatio is null) throw new ArgumentNullException(nameof(novoPatio));
+            Patio = novoPatio;
+            PatioId = novoPatio.Id;
+        }
     }
 }

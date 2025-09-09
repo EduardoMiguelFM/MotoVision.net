@@ -1,25 +1,27 @@
-﻿namespace Mottu.API.Controllers
-{
-    using Microsoft.AspNetCore.Mvc;
-    using Mottu.Application.DTOs;
-    using Mottu.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using Mottu.Application.DTOs;
+using Mottu.Application.Interfaces;
 
+namespace Mottu.API.Controllers
+{
     [ApiController]
     [Route("api/[controller]")]
     public class UsuarioPatioController : ControllerBase
     {
-        private readonly IUsuarioPatioService _service;
+        private readonly IUsuarioPatioRepository _service;
 
-        public UsuarioPatioController(IUsuarioPatioService service)
+        public UsuarioPatioController(IUsuarioPatioRepository service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll() => Ok(await _service.GetAllAsync());
+        public async Task<IActionResult> GetAll()
+            => Ok(await _service.GetAllAsync());
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id) => Ok(await _service.GetByIdAsync(id));
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> Get(int id)
+            => Ok(await _service.GetByIdAsync(id));
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UsuarioPatioDTO dto)
@@ -28,10 +30,11 @@
             return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UsuarioPatioDTO dto) => Ok(await _service.UpdateAsync(id, dto));
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Put(int id, [FromBody] UsuarioPatioDTO dto)
+            => Ok(await _service.UpdateAsync(id, dto));
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteAsync(id);

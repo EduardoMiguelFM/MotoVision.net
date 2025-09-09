@@ -1,7 +1,6 @@
-﻿using Mottu.Application.DTOs;
-using AutoMapper;
+﻿using AutoMapper;
+using Mottu.Application.DTOs;
 using Mottu.Domain.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Mottu.Application.Mapping
 {
@@ -10,13 +9,13 @@ namespace Mottu.Application.Mapping
         public MappingProfile()
         {
             CreateMap<Moto, MotoDTO>()
-                .ForMember(dest => dest.Setor, opt => opt.MapFrom(src => src.Setor))
-                .ForMember(dest => dest.Cor, opt => opt.MapFrom(src => src.Cor))
-                .ForMember(dest => dest.NomePatio, opt => opt.MapFrom(src => src.Patio.Nome))
-                .ReverseMap();
+                .ForMember(d => d.Placa, o => o.MapFrom(s => s.Placa.Valor))
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.Status.ToString()))
+                .ForMember(d => d.Setor, o => o.MapFrom(s => s.SetorCor.Setor))
+                .ForMember(d => d.Cor, o => o.MapFrom(s => s.SetorCor.Cor))
+                .ForMember(d => d.NomePatio, o => o.MapFrom(s => s.Patio.Nome));
 
             CreateMap<Patio, PatioDTO>().ReverseMap();
-
             CreateMap<UsuarioPatio, UsuarioPatioDTO>().ReverseMap();
         }
     }

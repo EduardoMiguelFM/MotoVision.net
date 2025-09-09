@@ -1,7 +1,8 @@
-﻿namespace Mottu.Application.Interfaces
+﻿using Mottu.Application.DTOs;
+
+namespace Mottu.Application.Interfaces
 {
-    using Mottu.Application.DTOs;
-    public interface IUsuarioPatioService
+    public interface IUsuarioPatioRepository
     {
         Task<IEnumerable<UsuarioPatioDTO>> GetAllAsync();
         Task<UsuarioPatioDTO> GetByIdAsync(int id);

@@ -48,12 +48,6 @@ D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\scopedcss\bundle\Mottu.
 D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets.build.json
 D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets.development.json
 D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets\msbuild.Mottu.Microsoft.AspNetCore.StaticWebAssets.props
-D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets\msbuild.Mottu.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets\msbuild.build.Mottu.props
-D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.Mottu.props
-D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.Mottu.props
-D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets.pack.json
 D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\Mottu.csproj.Up2Date
 D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\Mottu.dll
 D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\refint\Mottu.dll
@@ -148,3 +142,11 @@ D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\bin\Debug\net8.0\zh-Hans\Microsoft.CodeA
 D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\Mottu.sourcelink.json
+D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\bin\Debug\net8.0\FluentValidation.dll
+D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
+D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\rjimswa.dswa.cache.json
+D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+D:\FACULDADE-FIAP\C.net\cp2\Mottu\Mottu\obj\Debug\net8.0\staticwebassets.build.json.cache

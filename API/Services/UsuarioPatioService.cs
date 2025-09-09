@@ -1,13 +1,13 @@
-﻿namespace Mottu.API.Services
-{
-    using AutoMapper;
-    using Mottu.Application.DTOs;
-    using Mottu.Application.Interfaces;
-    using Mottu.Domain.Entities;
-    using Mottu.Infrastructure.Data;
-    using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Mottu.Application.DTOs;
+using Mottu.Application.Interfaces;
+using Mottu.Domain.Entities;
+using Mottu.Infrastructure.Data;
 
-    public class UsuarioPatioService : IUsuarioPatioService
+namespace Mottu.API.Services
+{
+    public class UsuarioPatioService : IUsuarioPatioRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -20,19 +20,31 @@
 
         public async Task<IEnumerable<UsuarioPatioDTO>> GetAllAsync()
         {
-            var usuarios = await _context.UsuariosPatio.ToListAsync();
+            var usuarios = await _context.UsuariosPatio.Include(u => u.Patio).ToListAsync();
             return _mapper.Map<IEnumerable<UsuarioPatioDTO>>(usuarios);
         }
 
         public async Task<UsuarioPatioDTO> GetByIdAsync(int id)
         {
             var usuario = await _context.UsuariosPatio.FindAsync(id);
-            return usuario is null ? throw new Exception("Usuário não encontrado") : _mapper.Map<UsuarioPatioDTO>(usuario);
+            if (usuario is null) throw new Exception("Usuário não encontrado");
+            return _mapper.Map<UsuarioPatioDTO>(usuario);
         }
 
         public async Task<UsuarioPatioDTO> CreateAsync(UsuarioPatioDTO dto)
         {
-            var usuario = _mapper.Map<UsuarioPatio>(dto);
+            var patio = await _context.Patios.FindAsync(dto.PatioId);
+            if (patio is null) throw new Exception("Pátio não encontrado");
+
+            var usuario = new UsuarioPatio
+            {
+                Nome = dto.Nome,
+                Email = dto.Email,
+                Funcao = dto.Funcao,
+                PatioId = patio.Id,
+                Patio = patio
+            };
+
             _context.UsuariosPatio.Add(usuario);
             await _context.SaveChangesAsync();
             return _mapper.Map<UsuarioPatioDTO>(usuario);
@@ -43,7 +55,11 @@
             var usuario = await _context.UsuariosPatio.FindAsync(id);
             if (usuario is null) throw new Exception("Usuário não encontrado");
 
-            _mapper.Map(dto, usuario);
+            usuario.Nome = dto.Nome;
+            usuario.Email = dto.Email;
+            usuario.Funcao = dto.Funcao;
+            usuario.PatioId = dto.PatioId;
+
             await _context.SaveChangesAsync();
             return _mapper.Map<UsuarioPatioDTO>(usuario);
         }

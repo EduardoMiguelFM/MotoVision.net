@@ -9,4 +9,3 @@
         public int PatioId { get; set; }
     }
 }
-

@@ -1,8 +1,8 @@
-﻿namespace Mottu.Application.Interfaces
-{
-    using Mottu.Application.DTOs;
+﻿using Mottu.Application.DTOs;
 
-    public interface IMotoService
+namespace Mottu.Application.Interfaces
+{
+    public interface IMotoRepository
     {
         Task<IEnumerable<MotoDTO>> GetAllAsync();
         Task<MotoDTO> GetByIdAsync(int id);
@@ -10,5 +10,4 @@
         Task<MotoDTO> UpdateAsync(int id, MotoDTO dto);
         Task DeleteAsync(int id);
     }
-
 }

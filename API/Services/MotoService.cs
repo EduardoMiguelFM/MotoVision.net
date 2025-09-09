@@ -1,21 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Mottu.Application.DTOs;
 using Mottu.Application.Interfaces;
 using Mottu.Domain.Entities;
+using Mottu.Domain.Enums;
+using Mottu.Domain.ValueObjects;
 using Mottu.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Mottu.API.Services
-{ 
-
-    using AutoMapper;
-    using Mottu.Application.DTOs;
-    using Mottu.Application.Interfaces;
-    using Mottu.Domain.Entities;
-    using Mottu.Infrastructure.Data;
-    using Microsoft.EntityFrameworkCore;
-
-    public class MotoService : IMotoService
+{
+    public class MotoService : IMotoRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -34,8 +28,12 @@ namespace Mottu.API.Services
 
         public async Task<MotoDTO> GetByIdAsync(int id)
         {
-            var moto = await _context.Motos.Include(m => m.Patio).FirstOrDefaultAsync(m => m.Id == id);
-            return moto is null ? throw new Exception("Moto não encontrada") : _mapper.Map<MotoDTO>(moto);
+            var moto = await _context.Motos
+                .Include(m => m.Patio)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (moto is null) throw new Exception("Moto não encontrada");
+            return _mapper.Map<MotoDTO>(moto);
         }
 
         public async Task<MotoDTO> CreateAsync(MotoDTO dto)
@@ -43,35 +41,28 @@ namespace Mottu.API.Services
             var patio = await _context.Patios.FirstOrDefaultAsync(p => p.Nome == dto.NomePatio);
             if (patio is null) throw new Exception("Pátio não encontrado");
 
-            var moto = new Moto
-            {
-                Modelo = dto.Modelo,
-                Placa = dto.Placa,
-                Status = Enum.Parse<MotoStatus>(dto.Status),
-                PatioId = patio.Id,
-                Patio = patio
-            };
+            var moto = new Moto(dto.Modelo, new Placa(dto.Placa), patio);
+            moto.DefinirStatus(Enum.Parse<StatusMoto>(dto.Status, ignoreCase: true));
 
             _context.Motos.Add(moto);
             await _context.SaveChangesAsync();
+
             return _mapper.Map<MotoDTO>(moto);
         }
 
         public async Task<MotoDTO> UpdateAsync(int id, MotoDTO dto)
         {
-            var moto = await _context.Motos.FindAsync(id);
+            var moto = await _context.Motos.Include(m => m.Patio).FirstOrDefaultAsync(m => m.Id == id);
             if (moto is null) throw new Exception("Moto não encontrada");
 
             var patio = await _context.Patios.FirstOrDefaultAsync(p => p.Nome == dto.NomePatio);
             if (patio is null) throw new Exception("Pátio não encontrado");
 
-            moto.Modelo = dto.Modelo;
-            moto.Placa = dto.Placa;
-            moto.Status = Enum.Parse<MotoStatus>(dto.Status);
-            moto.PatioId = patio.Id;
-            moto.Patio = patio;
-
+            moto.MoverPara(patio);
+            moto.DefinirStatus(Enum.Parse<StatusMoto>(dto.Status, ignoreCase: true));
+            // Caso queira alterar modelo/placa, crie métodos específicos no domínio.
             await _context.SaveChangesAsync();
+
             return _mapper.Map<MotoDTO>(moto);
         }
 
