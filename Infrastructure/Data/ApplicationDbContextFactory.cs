@@ -15,7 +15,7 @@ namespace Mottu.Infrastructure.Data
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseOracle(config.GetConnectionString("OracleDb"));
+            optionsBuilder.UseNpgsql(config.GetConnectionString("PostgreSQL"));
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

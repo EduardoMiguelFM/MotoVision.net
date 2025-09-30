@@ -18,74 +18,67 @@ namespace Mottu.API.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PatioDTO>> GetAllAsync()
+        public async Task<IEnumerable<PatioDto>> GetAllAsync()
         {
             var patios = await _context.Patios.ToListAsync();
-            return _mapper.Map<IEnumerable<PatioDTO>>(patios);
+            return _mapper.Map<IEnumerable<PatioDto>>(patios);
         }
 
-        public async Task<PatioDTO> GetByIdAsync(int id)
+        public async Task<PatioDto> GetByIdAsync(int id)
         {
-            var patio = await _context.Patios.FindAsync(id);
+            var patio = await _context.Patios.FirstOrDefaultAsync(p => p.Id == id);
             if (patio is null) throw new Exception("Pátio não encontrado");
-            return _mapper.Map<PatioDTO>(patio);
+            return _mapper.Map<PatioDto>(patio);
         }
 
-        public async Task<PatioDTO> CreateAsync(PatioDTO dto)
+        public async Task<PatioDto> CreateAsync(PatioDto dto)
         {
-            var patio = _mapper.Map<Patio>(dto);
+            var patio = new Patio(dto.Nome, dto.Endereco);
             _context.Patios.Add(patio);
             await _context.SaveChangesAsync();
-            return _mapper.Map<PatioDTO>(patio);
+            return _mapper.Map<PatioDto>(patio);
         }
 
-        public async Task<Patio?> GetByNameAsync(string nome)
-            => await _context.Patios.FirstOrDefaultAsync(x => x.Nome == nome);
-
-        public async Task<PatioDTO> UpdateAsync(int id, PatioDTO dto)
+        public async Task<PatioDto> UpdateAsync(int id, PatioDto dto)
         {
-            var patio = await _context.Patios.FindAsync(id);
+            var patio = await _context.Patios.FirstOrDefaultAsync(p => p.Id == id);
             if (patio is null) throw new Exception("Pátio não encontrado");
 
-            patio.GetType().GetProperty("Nome")!.SetValue(patio, dto.Nome); // manter set privado da entidade
+            // Atualizar propriedades usando reflection ou métodos específicos
+            var updatedPatio = new Patio(dto.Nome, dto.Endereco);
+            _context.Entry(patio).CurrentValues.SetValues(updatedPatio);
             await _context.SaveChangesAsync();
-            return _mapper.Map<PatioDTO>(patio);
+            return _mapper.Map<PatioDto>(patio);
         }
 
         public async Task DeleteAsync(int id)
         {
             var patio = await _context.Patios.FindAsync(id);
             if (patio is null) throw new Exception("Pátio não encontrado");
-
             _context.Patios.Remove(patio);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<object> ObterContagemPorSetorAsync(string setor)
+        public async Task<object> GetStatusAsync(int id)
         {
-            var motos = await _context.Motos
-                .Where(m => m.SetorCor.Setor.EndsWith(setor, StringComparison.OrdinalIgnoreCase))
-                .ToListAsync();
+            var patio = await _context.Patios
+                .Include(p => p.Motos)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-            var status = motos.FirstOrDefault()?.Status.ToString() ?? string.Empty;
-            return new { status, quantidade = motos.Count };
-        }
+            if (patio is null) throw new Exception("Pátio não encontrado");
 
-        public async Task<object> ObterStatusPorPlacaAsync(string placa)
-        {
-            var moto = await _context.Motos.FirstOrDefaultAsync(m => m.Placa.Valor == placa);
-            if (moto == null) throw new Exception("Moto não encontrada");
-            return new { status = moto.Status.ToString(), setor = moto.SetorCor.Setor, cor = moto.SetorCor.Cor };
-        }
+            var status = new
+            {
+                PatioId = patio.Id,
+                NomePatio = patio.Nome,
+                TotalMotos = patio.Motos.Count,
+                MotosDisponiveis = patio.Motos.Count(m => m.Status == Domain.Enums.StatusMoto.DISPONIVEL),
+                MotosReservadas = patio.Motos.Count(m => m.Status == Domain.Enums.StatusMoto.RESERVADA),
+                MotosManutencao = patio.Motos.Count(m => m.Status == Domain.Enums.StatusMoto.MANUTENCAO),
+                MotosIndisponiveis = patio.Motos.Count(m => m.Status == Domain.Enums.StatusMoto.INDISPONIVEL)
+            };
 
-        public async Task<Dictionary<string, int>> ObterResumoStatusAsync()
-        {
-            var statusContagem = await _context.Motos
-                .GroupBy(m => m.Status)
-                .Select(g => new { Status = g.Key.ToString(), Quantidade = g.Count() })
-                .ToListAsync();
-
-            return statusContagem.ToDictionary(x => x.Status, x => x.Quantidade);
+            return status;
         }
     }
 }

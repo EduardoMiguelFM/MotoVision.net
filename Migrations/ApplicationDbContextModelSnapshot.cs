@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mottu.Infrastructure.Data;
-using Oracle.EntityFrameworkCore.Metadata;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -16,88 +16,130 @@ namespace Mottu.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Mottu.Domain.Entities.Moto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Modelo")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR2(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("PatioId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
-                        .HasColumnName("STATUS");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PatioId");
 
-                    b.ToTable("MOTOS", (string)null);
+                    b.ToTable("motos", (string)null);
                 });
 
             modelBuilder.Entity("Mottu.Domain.Entities.Patio", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Endereco")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(120)
-                        .HasColumnType("NVARCHAR2(120)");
+                        .HasColumnType("character varying(120)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PATIOS", (string)null);
+                    b.ToTable("patios", (string)null);
+                });
+
+            modelBuilder.Entity("Mottu.Domain.Entities.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CPF")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("character varying(14)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Funcao")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)");
+
+                    b.Property<string>("Senha")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("usuarios", (string)null);
                 });
 
             modelBuilder.Entity("Mottu.Domain.Entities.UsuarioPatio", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("NVARCHAR2(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Funcao")
                         .IsRequired()
                         .HasMaxLength(60)
-                        .HasColumnType("NVARCHAR2(60)");
+                        .HasColumnType("character varying(60)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(120)
-                        .HasColumnType("NVARCHAR2(120)");
+                        .HasColumnType("character varying(120)");
 
                     b.Property<int>("PatioId")
-                        .HasColumnType("NUMBER(10)");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PatioId");
 
-                    b.ToTable("USUARIOS_PATIO", (string)null);
+                    b.ToTable("usuarios_patio", (string)null);
                 });
 
             modelBuilder.Entity("Mottu.Domain.Entities.Moto", b =>
@@ -111,17 +153,17 @@ namespace Mottu.Migrations
                     b.OwnsOne("Mottu.Domain.ValueObjects.Placa", "Placa", b1 =>
                         {
                             b1.Property<int>("MotoId")
-                                .HasColumnType("NUMBER(10)");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Valor")
                                 .IsRequired()
                                 .HasMaxLength(7)
-                                .HasColumnType("NVARCHAR2(7)")
-                                .HasColumnName("PLACA");
+                                .HasColumnType("character varying(7)")
+                                .HasColumnName("placa");
 
                             b1.HasKey("MotoId");
 
-                            b1.ToTable("MOTOS");
+                            b1.ToTable("motos");
 
                             b1.WithOwner()
                                 .HasForeignKey("MotoId");
@@ -130,23 +172,23 @@ namespace Mottu.Migrations
                     b.OwnsOne("Mottu.Domain.ValueObjects.SetorCor", "SetorCor", b1 =>
                         {
                             b1.Property<int>("MotoId")
-                                .HasColumnType("NUMBER(10)");
+                                .HasColumnType("integer");
 
                             b1.Property<string>("Cor")
                                 .IsRequired()
                                 .HasMaxLength(20)
-                                .HasColumnType("NVARCHAR2(20)")
-                                .HasColumnName("COR");
+                                .HasColumnType("character varying(20)")
+                                .HasColumnName("cor");
 
                             b1.Property<string>("Setor")
                                 .IsRequired()
                                 .HasMaxLength(20)
-                                .HasColumnType("NVARCHAR2(20)")
-                                .HasColumnName("SETOR");
+                                .HasColumnType("character varying(20)")
+                                .HasColumnName("setor");
 
                             b1.HasKey("MotoId");
 
-                            b1.ToTable("MOTOS");
+                            b1.ToTable("motos");
 
                             b1.WithOwner()
                                 .HasForeignKey("MotoId");

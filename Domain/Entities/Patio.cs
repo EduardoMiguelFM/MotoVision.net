@@ -1,16 +1,41 @@
-﻿using Mottu.Domain.ValueObjects;
+﻿using System.ComponentModel.DataAnnotations;
+using Mottu.Domain.ValueObjects;
 
 namespace Mottu.Domain.Entities
 {
+    /// <summary>
+    /// Representa um pátio onde as motos ficam estacionadas
+    /// </summary>
     public class Patio
     {
+        /// <summary>
+        /// Identificador único do pátio
+        /// </summary>
         public int Id { get; private set; }
+
+        /// <summary>
+        /// Nome do pátio (ex: Pátio Butantã, Pátio Vila Madalena)
+        /// </summary>
         public string Nome { get; private set; } = default!;
+
+        /// <summary>
+        /// Endereço completo do pátio
+        /// </summary>
+        public string Endereco { get; private set; } = default!;
+
         private readonly List<Moto> _motos = new();
+
+        /// <summary>
+        /// Lista de motos estacionadas neste pátio
+        /// </summary>
         public IReadOnlyCollection<Moto> Motos => _motos;
 
         private Patio() { } // EF
-        public Patio(string nome) => Nome = nome;
+        public Patio(string nome, string endereco)
+        {
+            Nome = nome;
+            Endereco = endereco;
+        }
 
         public Moto AdicionarMoto(string modelo, Placa placa)
         {
