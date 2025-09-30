@@ -10,6 +10,20 @@ API RESTful desenvolvida em .NET 8 para gestão da startup Mottu, uma empresa de
 
 ## 🏗️ Arquitetura do Projeto
 
+### Justificativa da Arquitetura
+
+O projeto adota **Clean Architecture (Arquitetura Limpa)** por quatro razões principais:
+
+1. **Separação de Responsabilidades**: Cada camada tem uma responsabilidade única e bem definida, facilitando manutenção e evolução do código.
+
+2. **Independência de Frameworks**: A lógica de negócio (Domain) não depende de frameworks externos, permitindo trocar tecnologias (banco de dados, framework web) sem impactar as regras de negócio.
+
+3. **Testabilidade**: A separação em camadas facilita testes unitários isolados. Podemos testar a lógica de negócio sem depender de banco de dados ou APIs externas.
+
+4. **Escalabilidade e Manutenibilidade**: Mudanças em uma camada não afetam as outras. Por exemplo, trocar PostgreSQL por MySQL só requer alterações na camada Infrastructure.
+
+### Estrutura das Camadas
+
 O projeto segue uma arquitetura em camadas (Clean Architecture) com as seguintes estruturas:
 
 ```
@@ -215,13 +229,6 @@ A documentação completa da API está disponível através do Swagger UI, inclu
 - **Setor e Cor**: Calculados baseado no status da moto
 - **Status**: Enum com 7 valores possíveis
 - **Validações**: Aplicadas via Data Annotations e FluentValidation
-
-## 🏆 Critérios de Avaliação Atendidos
-
-✅ **25 pts - 3 Entidades Principais**: Moto, Pátio, Usuário com domínio justificado
-✅ **50 pts - Endpoints CRUD**: CRUD completo + endpoints especiais + paginação + status codes
-✅ **15 pts - Swagger/OpenAPI**: Documentação completa com exemplos e descrições
-✅ **10 pts - Repositório GitHub**: README.md com integrantes, arquitetura, instruções e exemplos
 
 ## 💡 Exemplos de Uso
 
