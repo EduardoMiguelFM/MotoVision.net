@@ -1,0 +1,34 @@
+# Build results
+bin/
+obj/
+
+# Visual Studio cache
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Config files
+launchSettings.json
+
+# Logs and temp files
+*.log
+*.tlog
+*.tmp
+*.temp
+
+# Auto-generated files
+*.dbmdl
+*.bak
+*.cache
+*.pdb
+
+# Publish folder
+publish/
+out/
+
+# Other
+*.swp
+*.DS_Store
+Thumbs.db

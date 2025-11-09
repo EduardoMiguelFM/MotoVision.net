@@ -4,8 +4,11 @@ using Mottu.Application.Interfaces;
 
 namespace Mottu.API.Controllers
 {
+    // Aplica a versão 1.0
+    [ApiVersion("1.0")]
     [ApiController]
-    [Route("api/[controller]")]
+    // Rota explícita com o marcador de versão e o nome do recurso no plural
+    [Route("api/v{version:apiVersion}/patios")]
     public class PatiosController : ControllerBase
     {
         private readonly IPatioRepository _service;
@@ -50,7 +53,9 @@ namespace Mottu.API.Controllers
         public async Task<IActionResult> Post([FromBody] PatioDto dto)
         {
             var result = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
+            // Inclui o parâmetro 'version = "1.0"' para garantir que o redirecionamento (Location Header) 
+            // aponte corretamente para a rota versionada (/api/v1/patios/{id}).
+            return CreatedAtAction(nameof(Get), new { version = "1.0", id = result.Id }, result);
         }
 
         /// <summary>

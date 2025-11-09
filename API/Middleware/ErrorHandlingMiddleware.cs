@@ -1,17 +1,64 @@
-﻿namespace Mottu.API.Middleware
+﻿using Microsoft.AspNetCore.Authorization; // Adicionado para [Authorize]
+using Microsoft.AspNetCore.Mvc;
+using Mottu.API.Services;
+using Mottu.Domain.Models;
+
+namespace Mottu.API.Controllers
 {
-    public class ErrorHandlingMiddleware : IMiddleware
+    /// <summary>
+    /// Controlador responsável por expor endpoints de Machine Learning e Previsão.
+    /// Versão 1.0.
+    /// </summary>
+    [Authorize] // Protege todos os endpoints neste controller
+    [ApiVersion("1.0")]
+    [ApiController]
+    [Route("api/v{version:apiVersion}/ml")]
+    public class MlController : ControllerBase
     {
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        private readonly MlPredictionService _mlService;
+
+        public MlController(MlPredictionService mlService)
         {
+            _mlService = mlService;
+        }
+
+        /// <summary>
+        /// Realiza a previsão de risco de avaria para uma moto.
+        /// O modelo usa DaysInOperation, TotalMileageKm e YardType para classificar o risco.
+        /// Requer autenticação (JWT).
+        /// </summary>
+        /// <param name="input">Dados de entrada para a previsão.</param>
+        /// <returns>Resultado da previsão, incluindo o risco e a probabilidade.</returns>
+        /// <response code="200">Previsão realizada com sucesso</response>
+        /// <response code="400">Dados de entrada inválidos</response>
+        /// <response code="401">Não autorizado (Token JWT ausente ou inválido)</response>
+        [HttpPost("predict-risk")]
+        [ProducesResponseType(typeof(RiskPredictionOutput), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public IActionResult PredictRisk([FromBody] RiskPredictionInput input)
+        {
+            // Validação simples para demonstração
+            if (input.TotalMileageKm <= 0 || input.DaysInOperation <= 0 || string.IsNullOrWhiteSpace(input.YardType))
+            {
+                return BadRequest("Por favor, forneça DaysInOperation, TotalMileageKm e YardType válidos.");
+            }
+
             try
             {
-                await next(context);
+                var result = _mlService.Predict(input);
+
+                return Ok(new
+                {
+                    RiscoAlto = result.Prediction ? "Sim" : "Não",
+                    Probabilidade = $"{result.Probability:P2}", // Formata como porcentagem
+                    Detalhe = result
+                });
             }
             catch (Exception ex)
             {
-                context.Response.StatusCode = 400;
-                await context.Response.WriteAsJsonAsync(new { error = ex.Message });
+                // Em produção, registre o erro
+                return StatusCode(500, $"Ocorreu um erro interno ao realizar a previsão: {ex.Message}");
             }
         }
     }
