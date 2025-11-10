@@ -1,24 +1,58 @@
+using Microsoft.EntityFrameworkCore;
+using MotoVision.Domain.Entities;
+using MotoVision.Domain.Repositories;
+using MotoVision.Infrastructure.Data;
 
-using MongoDB.Driver;
-using Mottu.Infrastructure.Documents;
-using Mottu.Domain.Entities;
+namespace MotoVision.Infrastructure.Repositories
 
-public class MotoRepository : IMotoRepository
 {
-    private readonly IMongoCollection<MotoDocument> _collection;
-    public MotoRepository(IMongoDatabase db, string collectionName = "motos")
+    /// <summary>
+    /// Implementação do repositório de motos.
+    /// Responsável pelo acesso direto ao banco via Entity Framework.
+    /// </summary>
+    public class MotoRepository : IMotoRepository
     {
-        _collection = db.GetCollection<MotoDocument>(collectionName);
-    }
+        private readonly ApplicationDbContext _context;
 
-    private static Moto ToEntity(MotoDocument d)
-    {
-        var placa = Placa.Parse(d.Placa);
-        var patio = new Patio("", ""); // placeholder: se precisar, carregar Patio via PatioRepository
-        var moto = /* new Moto with internal ctor if available */ new Moto(d.Modelo, placa, patio);
-        // set Id, Status, PatioId appropriately (use internal ctor with id or reflection)
-        return moto;
-    }
+        public MotoRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
-    // Implement Create/Get/Update/Delete similar ao PatioRepository
+        public async Task<Moto?> ObterPorIdAsync(int id)
+        {
+            return await _context.Motos
+                .Include(m => m.Patio)
+                .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task<IEnumerable<Moto>> ListarAsync()
+        {
+            return await _context.Motos
+                .Include(m => m.Patio)
+                .ToListAsync();
+        }
+
+        public async Task AdicionarAsync(Moto moto)
+        {
+            await _context.Motos.AddAsync(moto);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AtualizarAsync(Moto moto)
+        {
+            _context.Motos.Update(moto);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RemoverAsync(int id)
+        {
+            var moto = await _context.Motos.FindAsync(id);
+            if (moto != null)
+            {
+                _context.Motos.Remove(moto);
+                await _context.SaveChangesAsync();
+            }
+        }
+    }
 }

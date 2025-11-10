@@ -1,7 +1,8 @@
-﻿namespace Mottu.Application.Interfaces
+namespace MotoVision.Application.Interfaces
 {
     public interface IUnitOfWork
     {
         Task<int> SaveChangesAsync(CancellationToken ct = default);
     }
 }
+

@@ -1,13 +1,13 @@
-Ôªøusing Microsoft.AspNetCore.Authorization; // Adicionado para [Authorize]
+using Microsoft.AspNetCore.Authorization; // Adicionado para [Authorize]
 using Microsoft.AspNetCore.Mvc;
-using Mottu.API.Services;
-using Mottu.Domain.Models;
+using MotoVision.API.Services;
+using MotoVision.Domain.Models;
 
-namespace Mottu.API.Controllers
+namespace MotoVision.API.Controllers
 {
     /// <summary>
-    /// Controlador respons√°vel por expor endpoints de Machine Learning e Previs√£o.
-    /// Vers√£o 1.0.
+    /// Controlador respons·vel por expor endpoints de Machine Learning e Previs„o.
+    /// Vers„o 1.0.
     /// </summary>
     [Authorize] // Protege todos os endpoints neste controller
     [ApiVersion("1.0")]
@@ -23,25 +23,25 @@ namespace Mottu.API.Controllers
         }
 
         /// <summary>
-        /// Realiza a previs√£o de risco de avaria para uma moto.
+        /// Realiza a previs„o de risco de avaria para uma moto.
         /// O modelo usa DaysInOperation, TotalMileageKm e YardType para classificar o risco.
-        /// Requer autentica√ß√£o (JWT).
+        /// Requer autenticaÁ„o (JWT).
         /// </summary>
-        /// <param name="input">Dados de entrada para a previs√£o.</param>
-        /// <returns>Resultado da previs√£o, incluindo o risco e a probabilidade.</returns>
-        /// <response code="200">Previs√£o realizada com sucesso</response>
-        /// <response code="400">Dados de entrada inv√°lidos</response>
-        /// <response code="401">N√£o autorizado (Token JWT ausente ou inv√°lido)</response>
+        /// <param name="input">Dados de entrada para a previs„o.</param>
+        /// <returns>Resultado da previs„o, incluindo o risco e a probabilidade.</returns>
+        /// <response code="200">Previs„o realizada com sucesso</response>
+        /// <response code="400">Dados de entrada inv·lidos</response>
+        /// <response code="401">N„o autorizado (Token JWT ausente ou inv·lido)</response>
         [HttpPost("predict-risk")]
         [ProducesResponseType(typeof(RiskPredictionOutput), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         public IActionResult PredictRisk([FromBody] RiskPredictionInput input)
         {
-            // Valida√ß√£o simples para demonstra√ß√£o
+            // ValidaÁ„o simples para demonstraÁ„o
             if (input.TotalMileageKm <= 0 || input.DaysInOperation <= 0 || string.IsNullOrWhiteSpace(input.YardType))
             {
-                return BadRequest("Por favor, forne√ßa DaysInOperation, TotalMileageKm e YardType v√°lidos.");
+                return BadRequest("Por favor, forneÁa DaysInOperation, TotalMileageKm e YardType v·lidos.");
             }
 
             try
@@ -50,16 +50,17 @@ namespace Mottu.API.Controllers
 
                 return Ok(new
                 {
-                    RiscoAlto = result.Prediction ? "Sim" : "N√£o",
+                    RiscoAlto = result.Prediction ? "Sim" : "N„o",
                     Probabilidade = $"{result.Probability:P2}", // Formata como porcentagem
                     Detalhe = result
                 });
             }
             catch (Exception ex)
             {
-                // Em produ√ß√£o, registre o erro
-                return StatusCode(500, $"Ocorreu um erro interno ao realizar a previs√£o: {ex.Message}");
+                // Em produÁ„o, registre o erro
+                return StatusCode(500, $"Ocorreu um erro interno ao realizar a previs„o: {ex.Message}");
             }
         }
     }
 }
+

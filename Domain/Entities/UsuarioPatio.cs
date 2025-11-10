@@ -1,4 +1,4 @@
-﻿namespace Mottu.Domain.Entities
+namespace MotoVision.Domain.Entities
 {
     public class UsuarioPatio
     {
@@ -10,3 +10,4 @@
         public required Patio Patio { get; set; }
     }
 }
+

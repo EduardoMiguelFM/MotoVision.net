@@ -1,65 +1,100 @@
-using Microsoft.AspNetCore.Authorization; // Adicionado para [Authorize]
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Mottu.API.Services;
-using Mottu.Domain.Models;
+using MotoVision.API.Services;
+using MotoVision.Domain.Models;
+using MotoVision.Application.DTOs; // <-- adicionado para os DTOs corretos
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Mottu.API.Controllers
+namespace MotoVision.API.Controllers
 {
     /// <summary>
-    /// Controlador responsável por expor endpoints de Machine Learning e Previsão.
+    /// Controlador responsável pelo gerenciamento de usuários.
+    /// Inclui autenticação, cadastro e listagem.
     /// Versão 1.0.
     /// </summary>
-    [Authorize] // Protege todos os endpoints neste controller
+    [Authorize] // Exige JWT por padrão
     [ApiVersion("1.0")]
     [ApiController]
-    [Route("api/v{version:apiVersion}/ml")]
-    public class MlController : ControllerBase
+    [Route("api/v{version:apiVersion}/usuarios")]
+    public class UsuariosController : ControllerBase
     {
-        private readonly MlPredictionService _mlService;
+        private readonly UsuarioService _usuarioService;
+        private readonly TokenService _tokenService;
 
-        public MlController(MlPredictionService mlService)
+        public UsuariosController(UsuarioService usuarioService, TokenService tokenService)
         {
-            _mlService = mlService;
+            _usuarioService = usuarioService;
+            _tokenService = tokenService;
         }
 
         /// <summary>
-        /// Realiza a previsão de risco de avaria para uma moto.
-        /// O modelo usa DaysInOperation, TotalMileageKm e YardType para classificar o risco.
-        /// Requer autenticação (JWT).
+        /// Autentica um usuário e gera um token JWT.
         /// </summary>
-        /// <param name="input">Dados de entrada para a previsão.</param>
-        /// <returns>Resultado da previsão, incluindo o risco e a probabilidade.</returns>
-        /// <response code="200">Previsão realizada com sucesso</response>
-        /// <response code="400">Dados de entrada inválidos</response>
-        /// <response code="401">Não autorizado (Token JWT ausente ou inválido)</response>
-        [HttpPost("predict-risk")]
-        [ProducesResponseType(typeof(RiskPredictionOutput), 200)]
+        /// <param name="login">Credenciais de login (email e senha)</param>
+        /// <returns>Token JWT válido</returns>
+        [AllowAnonymous]
+        [HttpPost("login")]
+        [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        public IActionResult PredictRisk([FromBody] RiskPredictionInput input)
+        public async Task<IActionResult> Login([FromBody] UsuarioLoginDto login)
         {
-            // Validação simples para demonstração
-            if (input.TotalMileageKm <= 0 || input.DaysInOperation <= 0 || string.IsNullOrWhiteSpace(input.YardType))
-            {
-                return BadRequest("Por favor, forneça DaysInOperation, TotalMileageKm e YardType válidos.");
-            }
+            if (string.IsNullOrWhiteSpace(login.Email) || string.IsNullOrWhiteSpace(login.Senha))
+                return BadRequest("Email e senha são obrigatórios.");
 
-            try
-            {
-                var result = _mlService.Predict(input);
+            var usuario = await _usuarioService.AutenticarAsync(login.Email, login.Senha);
 
-                return Ok(new
-                {
-                    RiscoAlto = result.Prediction ? "Sim" : "Não",
-                    Probabilidade = $"{result.Probability:P2}", // Formata como porcentagem
-                    Detalhe = result
-                });
-            }
-            catch (Exception ex)
-            {
-                // Em produção, registre o erro
-                return StatusCode(500, $"Ocorreu um erro interno ao realizar a previsão: {ex.Message}");
-            }
+            if (usuario == null)
+                return Unauthorized("Credenciais inválidas.");
+
+            var token = _tokenService.GenerateToken(usuario);
+            return Ok(new { Token = token });
+        }
+
+        /// <summary>
+        /// Cadastra um novo usuário.
+        /// </summary>
+        [AllowAnonymous]
+        [HttpPost("register")]
+        [ProducesResponseType(typeof(UsuarioDto), 201)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> Registrar([FromBody] UsuarioDto usuarioDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var novoUsuario = await _usuarioService.RegistrarAsync(usuarioDto);
+            if (novoUsuario == null)
+                return BadRequest("Erro ao criar usuário.");
+
+            return CreatedAtAction(nameof(ObterPorId), new { id = novoUsuario.Id, version = "1.0" }, novoUsuario);
+        }
+
+        /// <summary>
+        /// Retorna um usuário pelo ID.
+        /// </summary>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(UsuarioDto), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ObterPorId(int id)
+        {
+            var usuario = await _usuarioService.ObterPorIdAsync(id);
+            if (usuario == null)
+                return NotFound();
+
+            return Ok(usuario);
+        }
+
+        /// <summary>
+        /// Lista todos os usuários (requer autenticação).
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<UsuarioDto>), 200)]
+        public async Task<IActionResult> Listar()
+        {
+            var usuarios = await _usuarioService.ListarAsync();
+            return Ok(usuarios);
         }
     }
 }
+

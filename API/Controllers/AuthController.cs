@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Mottu.API.Services;
-using Mottu.Infrastructure.Data;
+using MotoVision.API.Services;
+using MotoVision.Infrastructure.Data;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Mottu.API.Controllers
+namespace MotoVision.API.Controllers
 {
     // Aplica a versão 1.0
     [ApiVersion("1.0")]
@@ -126,3 +126,4 @@ namespace Mottu.API.Controllers
         public DateTime DataCriacao { get; set; } = DateTime.UtcNow;
     }
 }
+

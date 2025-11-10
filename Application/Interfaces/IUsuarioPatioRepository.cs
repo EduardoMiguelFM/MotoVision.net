@@ -1,6 +1,6 @@
-﻿using Mottu.Application.DTOs;
+using MotoVision.Application.DTOs;
 
-namespace Mottu.Application.Interfaces
+namespace MotoVision.Application.Interfaces
 {
     public interface IUsuarioPatioRepository
     {
@@ -11,3 +11,4 @@ namespace Mottu.Application.Interfaces
         Task DeleteAsync(int id);
     }
 }
+

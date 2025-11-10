@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Mottu.API.Controllers; // importa a classe Usuario
+using MotoVision.Domain.Entities; // onde Patio, Moto, UsuarioPatio estão definidos
+using MotoVision.Domain.ValueObjects; 
 
-namespace Mottu.Infrastructure.Data
+namespace MotoVision.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
@@ -9,5 +10,10 @@ namespace Mottu.Infrastructure.Data
             : base(options) { }
 
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Patio> Patios { get; set; }
+        public DbSet<Moto> Motos { get; set; }
+        public DbSet<UsuarioPatio> UsuariosPatio { get; set; }
+
+        
     }
 }

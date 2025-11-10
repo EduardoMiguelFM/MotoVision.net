@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Mottu.Domain.Entities
+namespace MotoVision.Domain.Entities
 {
     /// <summary>
-    /// Representa um usuário do sistema (funcionário da Mottu)
+    /// Representa um usuário do sistema (funcionário da MotoVision)
     /// </summary>
     public class Usuario
     {
@@ -38,3 +38,4 @@ namespace Mottu.Domain.Entities
         public string Funcao { get; set; } = default!;
     }
 }
+

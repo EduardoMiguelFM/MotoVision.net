@@ -1,38 +1,38 @@
-Ôªøusing System.ComponentModel.DataAnnotations;
-using Mottu.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
+using MotoVision.Domain.Enums;
 
-namespace Mottu.Application.DTOs
+namespace MotoVision.Application.DTOs
 {
     /// <summary>
-    /// DTO para cria√ß√£o e atualiza√ß√£o de motos
+    /// DTO para criaÁ„o e atualizaÁ„o de motos
     /// </summary>
     public class MotoDto
     {
         /// <summary>
         /// Modelo da moto (ex: Honda Biz, Yamaha Factor)
         /// </summary>
-        [Required(ErrorMessage = "Modelo √© obrigat√≥rio")]
-        [StringLength(100, ErrorMessage = "Modelo deve ter no m√°ximo 100 caracteres")]
+        [Required(ErrorMessage = "Modelo È obrigatÛrio")]
+        [StringLength(100, ErrorMessage = "Modelo deve ter no m·ximo 100 caracteres")]
         public string Modelo { get; set; } = default!;
 
         /// <summary>
         /// Placa da moto (formato: ABC1234)
         /// </summary>
-        [Required(ErrorMessage = "Placa √© obrigat√≥ria")]
+        [Required(ErrorMessage = "Placa È obrigatÛria")]
         [StringLength(7, MinimumLength = 7, ErrorMessage = "Placa deve ter exatamente 7 caracteres")]
         public string Placa { get; set; } = default!;
 
         /// <summary>
         /// Status da moto
         /// </summary>
-        [Required(ErrorMessage = "Status √© obrigat√≥rio")]
+        [Required(ErrorMessage = "Status È obrigatÛrio")]
         public StatusMoto Status { get; set; }
 
         /// <summary>
-        /// ID do p√°tio onde a moto ser√° estacionada
+        /// ID do p·tio onde a moto ser· estacionada
         /// </summary>
-        [Required(ErrorMessage = "ID do p√°tio √© obrigat√≥rio")]
-        [Range(1, int.MaxValue, ErrorMessage = "ID do p√°tio deve ser maior que zero")]
+        [Required(ErrorMessage = "ID do p·tio È obrigatÛrio")]
+        [Range(1, int.MaxValue, ErrorMessage = "ID do p·tio deve ser maior que zero")]
         public int PatioId { get; set; }
     }
 
@@ -42,7 +42,7 @@ namespace Mottu.Application.DTOs
     public class MotoResponseDto
     {
         /// <summary>
-        /// Identificador √∫nico da moto
+        /// Identificador ˙nico da moto
         /// </summary>
         public int Id { get; set; }
 
@@ -62,7 +62,7 @@ namespace Mottu.Application.DTOs
         public StatusMoto Status { get; set; }
 
         /// <summary>
-        /// Setor onde a moto est√° localizada (calculado automaticamente)
+        /// Setor onde a moto est· localizada (calculado automaticamente)
         /// </summary>
         public string Setor { get; set; } = default!;
 
@@ -72,8 +72,9 @@ namespace Mottu.Application.DTOs
         public string CorSetor { get; set; } = default!;
 
         /// <summary>
-        /// Nome do p√°tio onde a moto est√° estacionada
+        /// Nome do p·tio onde a moto est· estacionada
         /// </summary>
         public string NomePatio { get; set; } = default!;
     }
 }
+

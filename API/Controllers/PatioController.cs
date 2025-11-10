@@ -1,13 +1,13 @@
-Ôªøusing Microsoft.AspNetCore.Mvc;
-using Mottu.Application.DTOs;
-using Mottu.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using MotoVision.Application.DTOs;
+using MotoVision.Application.Interfaces;
 
-namespace Mottu.API.Controllers
+namespace MotoVision.API.Controllers
 {
-    // Aplica a vers√£o 1.0
+    // Aplica a vers„o 1.0
     [ApiVersion("1.0")]
     [ApiController]
-    // Rota expl√≠cita com o marcador de vers√£o e o nome do recurso no plural
+    // Rota explÌcita com o marcador de vers„o e o nome do recurso no plural
     [Route("api/v{version:apiVersion}/patios")]
     public class PatioController : ControllerBase
     {
@@ -19,52 +19,52 @@ namespace Mottu.API.Controllers
         }
 
         /// <summary>
-        /// Lista todos os p√°tios
+        /// Lista todos os p·tios
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
             => Ok(await _patioService.GetAllAsync());
 
         /// <summary>
-        /// Busca p√°tio por ID
+        /// Busca p·tio por ID
         /// </summary>
-        /// <param name="id">ID do p√°tio</param>
-        /// <returns>Dados do p√°tio</returns>
+        /// <param name="id">ID do p·tio</param>
+        /// <returns>Dados do p·tio</returns>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
             => Ok(await _patioService.GetByIdAsync(id));
 
         /// <summary>
-        /// Cria um novo p√°tio
+        /// Cria um novo p·tio
         /// </summary>
-        /// <param name="dto">Dados do p√°tio</param>
-        /// <returns>P√°tio criado</returns>
-        /// <response code="201">P√°tio criado com sucesso</response>
-        /// <response code="400">Dados inv√°lidos</response>
+        /// <param name="dto">Dados do p·tio</param>
+        /// <returns>P·tio criado</returns>
+        /// <response code="201">P·tio criado com sucesso</response>
+        /// <response code="400">Dados inv·lidos</response>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PatioDto dto)
         {
             var result = await _patioService.CreateAsync(dto);
-            // Inclui o par√¢metro 'version' para garantir que o redirecionamento (Location Header) 
+            // Inclui o par‚metro 'version' para garantir que o redirecionamento (Location Header) 
             // aponte para a rota /api/v1/patios/{id}
             return CreatedAtAction(nameof(Get), new { version = "1.0", id = result.Id }, result);
         }
 
         /// <summary>
-        /// Atualiza um p√°tio existente
+        /// Atualiza um p·tio existente
         /// </summary>
-        /// <param name="id">ID do p√°tio</param>
-        /// <param name="dto">Novos dados do p√°tio</param>
-        /// <returns>P√°tio atualizado</returns>
+        /// <param name="id">ID do p·tio</param>
+        /// <param name="dto">Novos dados do p·tio</param>
+        /// <returns>P·tio atualizado</returns>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromBody] PatioDto dto)
             => Ok(await _patioService.UpdateAsync(id, dto));
 
         /// <summary>
-        /// Remove um p√°tio
+        /// Remove um p·tio
         /// </summary>
-        /// <param name="id">ID do p√°tio</param>
-        /// <returns>Sem conte√∫do</returns>
+        /// <param name="id">ID do p·tio</param>
+        /// <returns>Sem conte˙do</returns>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -73,12 +73,13 @@ namespace Mottu.API.Controllers
         }
 
         /// <summary>
-        /// Obt√©m status geral do p√°tio
+        /// ObtÈm status geral do p·tio
         /// </summary>
-        /// <param name="id">ID do p√°tio</param>
-        /// <returns>Status do p√°tio com contagem de motos</returns>
+        /// <param name="id">ID do p·tio</param>
+        /// <returns>Status do p·tio com contagem de motos</returns>
         [HttpGet("{id:int}/status")]
         public async Task<IActionResult> GetStatus(int id)
             => Ok(await _patioService.GetStatusAsync(id));
     }
 }
+

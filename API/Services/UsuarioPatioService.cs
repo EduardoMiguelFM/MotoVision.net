@@ -1,11 +1,11 @@
-Ôªøusing AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Mottu.Application.DTOs;
-using Mottu.Application.Interfaces;
-using Mottu.Domain.Entities;
-using Mottu.Infrastructure.Data;
+using MotoVision.Application.DTOs;
+using MotoVision.Application.Interfaces;
+using MotoVision.Domain.Entities;
+using MotoVision.Infrastructure.Data;
 
-namespace Mottu.API.Services
+namespace MotoVision.API.Services
 {
     public class UsuarioPatioService : IUsuarioPatioRepository
     {
@@ -27,14 +27,14 @@ namespace Mottu.API.Services
         public async Task<UsuarioPatioDTO> GetByIdAsync(int id)
         {
             var usuario = await _context.UsuariosPatio.FindAsync(id);
-            if (usuario is null) throw new Exception("Usu√°rio n√£o encontrado");
+            if (usuario is null) throw new Exception("Usu·rio n„o encontrado");
             return _mapper.Map<UsuarioPatioDTO>(usuario);
         }
 
         public async Task<UsuarioPatioDTO> CreateAsync(UsuarioPatioDTO dto)
         {
             var patio = await _context.Patios.FindAsync(dto.PatioId);
-            if (patio is null) throw new Exception("P√°tio n√£o encontrado");
+            if (patio is null) throw new Exception("P·tio n„o encontrado");
 
             var usuario = new UsuarioPatio
             {
@@ -53,7 +53,7 @@ namespace Mottu.API.Services
         public async Task<UsuarioPatioDTO> UpdateAsync(int id, UsuarioPatioDTO dto)
         {
             var usuario = await _context.UsuariosPatio.FindAsync(id);
-            if (usuario is null) throw new Exception("Usu√°rio n√£o encontrado");
+            if (usuario is null) throw new Exception("Usu·rio n„o encontrado");
 
             usuario.Nome = dto.Nome;
             usuario.Email = dto.Email;
@@ -67,10 +67,11 @@ namespace Mottu.API.Services
         public async Task DeleteAsync(int id)
         {
             var usuario = await _context.UsuariosPatio.FindAsync(id);
-            if (usuario is null) throw new Exception("Usu√°rio n√£o encontrado");
+            if (usuario is null) throw new Exception("Usu·rio n„o encontrado");
 
             _context.UsuariosPatio.Remove(usuario);
             await _context.SaveChangesAsync();
         }
     }
 }
+

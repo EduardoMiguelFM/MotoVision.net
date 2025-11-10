@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using Mottu.Application.DTOs;
-using Mottu.Domain.Entities;
+using AutoMapper;
+using MotoVision.Application.DTOs;
+using MotoVision.Domain.Entities;
 
-namespace Mottu.Application.Mapping
+namespace MotoVision.Application.Mapping
 {
     public class MappingProfile : Profile
     {
@@ -35,3 +35,4 @@ namespace Mottu.Application.Mapping
         }
     }
 }
+

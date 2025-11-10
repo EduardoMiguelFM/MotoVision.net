@@ -1,6 +1,6 @@
-using Mottu.Domain.Entities;
+using MotoVision.Domain.Entities;
 
-namespace Mottu.Application.Interfaces
+namespace MotoVision.Application.Interfaces
 {
     public interface ILogRepository
     {
@@ -8,3 +8,4 @@ namespace Mottu.Application.Interfaces
         Task AddAsync(MotoLog log);
     }
 }
+

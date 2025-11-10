@@ -1,29 +1,30 @@
-Ôªøusing System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Mottu.Application.DTOs
+namespace MotoVision.Application.DTOs
 {
     /// <summary>
-    /// DTO para cria√ß√£o, atualiza√ß√£o e consulta de p√°tios
+    /// DTO para criaÁ„o, atualizaÁ„o e consulta de p·tios
     /// </summary>
     public class PatioDto
     {
         /// <summary>
-        /// Identificador √∫nico do p√°tio
+        /// Identificador ˙nico do p·tio
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Nome do p√°tio (ex: P√°tio Butant√£, P√°tio Vila Madalena)
+        /// Nome do p·tio (ex: P·tio Butant„, P·tio Vila Madalena)
         /// </summary>
-        [Required(ErrorMessage = "Nome √© obrigat√≥rio")]
-        [StringLength(120, ErrorMessage = "Nome deve ter no m√°ximo 120 caracteres")]
+        [Required(ErrorMessage = "Nome È obrigatÛrio")]
+        [StringLength(120, ErrorMessage = "Nome deve ter no m·ximo 120 caracteres")]
         public string Nome { get; set; } = default!;
 
         /// <summary>
-        /// Endere√ßo completo do p√°tio
+        /// EndereÁo completo do p·tio
         /// </summary>
-        [Required(ErrorMessage = "Endere√ßo √© obrigat√≥rio")]
-        [StringLength(200, ErrorMessage = "Endere√ßo deve ter no m√°ximo 200 caracteres")]
+        [Required(ErrorMessage = "EndereÁo È obrigatÛrio")]
+        [StringLength(200, ErrorMessage = "EndereÁo deve ter no m·ximo 200 caracteres")]
         public string Endereco { get; set; } = default!;
     }
 }
+

@@ -1,13 +1,13 @@
-Ôªøusing Microsoft.AspNetCore.Mvc;
-using Mottu.Application.DTOs;
-using Mottu.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using MotoVision.Application.DTOs;
+using MotoVision.Application.Interfaces;
 
-namespace Mottu.API.Controllers
+namespace MotoVision.API.Controllers
 {
-    // Aplica a vers√£o 1.0
+    // Aplica a vers„o 1.0
     [ApiVersion("1.0")]
     [ApiController]
-    // Rota com o marcador de vers√£o e nome do recurso (no plural e hifenizado)
+    // Rota com o marcador de vers„o e nome do recurso (no plural e hifenizado)
     [Route("api/v{version:apiVersion}/usuario-patios")]
     public class UsuarioPatioController : ControllerBase
     {
@@ -19,49 +19,49 @@ namespace Mottu.API.Controllers
         }
 
         /// <summary>
-        /// Lista todas as associa√ß√µes de usu√°rio-p√°tio
+        /// Lista todas as associaÁıes de usu·rio-p·tio
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll()
             => Ok(await _service.GetAllAsync());
 
         /// <summary>
-        /// Busca associa√ß√£o de usu√°rio-p√°tio por ID
+        /// Busca associaÁ„o de usu·rio-p·tio por ID
         /// </summary>
-        /// <param name="id">ID da associa√ß√£o</param>
-        /// <returns>Dados da associa√ß√£o</returns>
+        /// <param name="id">ID da associaÁ„o</param>
+        /// <returns>Dados da associaÁ„o</returns>
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
             => Ok(await _service.GetByIdAsync(id));
 
         /// <summary>
-        /// Cria uma nova associa√ß√£o de usu√°rio-p√°tio
+        /// Cria uma nova associaÁ„o de usu·rio-p·tio
         /// </summary>
-        /// <param name="dto">Dados da associa√ß√£o</param>
-        /// <returns>Associa√ß√£o criada</returns>
+        /// <param name="dto">Dados da associaÁ„o</param>
+        /// <returns>AssociaÁ„o criada</returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UsuarioPatioDTO dto)
         {
             var result = await _service.CreateAsync(dto);
-            // Inclui o par√¢metro 'version = "1.0"' para garantir o Location Header correto
+            // Inclui o par‚metro 'version = "1.0"' para garantir o Location Header correto
             return CreatedAtAction(nameof(Get), new { version = "1.0", id = result.Id }, result);
         }
 
         /// <summary>
-        /// Atualiza uma associa√ß√£o de usu√°rio-p√°tio existente
+        /// Atualiza uma associaÁ„o de usu·rio-p·tio existente
         /// </summary>
-        /// <param name="id">ID da associa√ß√£o</param>
-        /// <param name="dto">Novos dados da associa√ß√£o</param>
-        /// <returns>Associa√ß√£o atualizada</returns>
+        /// <param name="id">ID da associaÁ„o</param>
+        /// <param name="dto">Novos dados da associaÁ„o</param>
+        /// <returns>AssociaÁ„o atualizada</returns>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Put(int id, [FromBody] UsuarioPatioDTO dto)
             => Ok(await _service.UpdateAsync(id, dto));
 
         /// <summary>
-        /// Remove uma associa√ß√£o de usu√°rio-p√°tio
+        /// Remove uma associaÁ„o de usu·rio-p·tio
         /// </summary>
-        /// <param name="id">ID da associa√ß√£o</param>
-        /// <returns>Sem conte√∫do</returns>
+        /// <param name="id">ID da associaÁ„o</param>
+        /// <returns>Sem conte˙do</returns>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -70,3 +70,4 @@ namespace Mottu.API.Controllers
         }
     }
 }
+

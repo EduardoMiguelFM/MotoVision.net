@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Mottu.Application.DTOs;
-using Mottu.Application.Interfaces;
+using MotoVision.Application.DTOs;
+using MotoVision.Application.Interfaces;
 
-namespace Mottu.API.Controllers
+namespace MotoVision.API.Controllers
 {
     // Aplica a versão 1.0
     [ApiVersion("1.0")]
@@ -81,3 +81,4 @@ namespace Mottu.API.Controllers
         }
     }
 }
+

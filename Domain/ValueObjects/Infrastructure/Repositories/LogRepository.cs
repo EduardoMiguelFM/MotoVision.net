@@ -1,8 +1,8 @@
 using MongoDB.Driver;
-using Mottu.Application.Interfaces;
-using Mottu.Domain.Entities;
+using MotoVision.Application.Interfaces;
+using MotoVision.Domain.Entities;
 
-namespace Mottu.Infrastructure.Repositories
+namespace MotoVision.Infrastructure.Repositories
 {
     public class LogRepository : ILogRepository
     {
@@ -24,3 +24,4 @@ namespace Mottu.Infrastructure.Repositories
         }
     }
 }
+

@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Mottu.API.Services
+namespace MotoVision.API.Services
 {
     public class TokenService
     {
@@ -42,3 +42,4 @@ namespace Mottu.API.Services
         }
     }
 }
+

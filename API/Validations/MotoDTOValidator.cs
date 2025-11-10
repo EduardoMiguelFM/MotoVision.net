@@ -1,7 +1,7 @@
-﻿using FluentValidation;
-using Mottu.Application.DTOs;
+using FluentValidation;
+using MotoVision.Application.DTOs;
 
-namespace Mottu.API.Validations
+namespace MotoVision.API.Validations
 {
     public class MotoDTOValidator : AbstractValidator<MotoDto>
     {
@@ -14,3 +14,4 @@ namespace Mottu.API.Validations
         }
     }
 }
+

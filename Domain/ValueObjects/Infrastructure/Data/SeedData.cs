@@ -1,7 +1,7 @@
-using Mottu.Domain.Entities;
-using Mottu.Domain.ValueObjects;
+using MotoVision.Domain.Entities;
+using MotoVision.Domain.ValueObjects;
 
-namespace Mottu.Infrastructure.Data
+namespace MotoVision.Infrastructure.Data
 {
     public static class SeedData
     {
@@ -27,7 +27,7 @@ namespace Mottu.Infrastructure.Data
                     new Usuario
                     {
                         Nome = "Admin",
-                        Email = "admin@mottu.com.br",
+                        Email = "admin@MotoVision.com.br",
                         Senha = "admin123",
                         CPF = "123.456.789-00",
                         Funcao = "Administrador"
@@ -35,7 +35,7 @@ namespace Mottu.Infrastructure.Data
                     new Usuario
                     {
                         Nome = "Supervisor",
-                        Email = "supervisor@mottu.com.br",
+                        Email = "supervisor@MotoVision.com.br",
                         Senha = "super123",
                         CPF = "987.654.321-00",
                         Funcao = "Supervisor"
@@ -43,7 +43,7 @@ namespace Mottu.Infrastructure.Data
                     new Usuario
                     {
                         Nome = "Operador",
-                        Email = "operador@mottu.com.br",
+                        Email = "operador@MotoVision.com.br",
                         Senha = "oper123",
                         CPF = "456.789.123-00",
                         Funcao = "Operador"
@@ -90,3 +90,4 @@ namespace Mottu.Infrastructure.Data
         }
     }
 }
+

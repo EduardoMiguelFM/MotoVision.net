@@ -1,11 +1,11 @@
-Ôªøusing AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Mottu.Application.DTOs;
-using Mottu.Application.Interfaces;
-using Mottu.Domain.Entities;
-using Mottu.Infrastructure.Data;
+using MotoVision.Application.DTOs;
+using MotoVision.Application.Interfaces;
+using MotoVision.Domain.Entities;
+using MotoVision.Infrastructure.Data;
 
-namespace Mottu.API.Services
+namespace MotoVision.API.Services
 {
     public class PatioService : IPatioRepository
     {
@@ -27,7 +27,7 @@ namespace Mottu.API.Services
         public async Task<PatioDto> GetByIdAsync(int id)
         {
             var patio = await _context.Patios.FirstOrDefaultAsync(p => p.Id == id);
-            if (patio is null) throw new Exception("P√°tio n√£o encontrado");
+            if (patio is null) throw new Exception("P·tio n„o encontrado");
             return _mapper.Map<PatioDto>(patio);
         }
 
@@ -42,9 +42,9 @@ namespace Mottu.API.Services
         public async Task<PatioDto> UpdateAsync(int id, PatioDto dto)
         {
             var patio = await _context.Patios.FirstOrDefaultAsync(p => p.Id == id);
-            if (patio is null) throw new Exception("P√°tio n√£o encontrado");
+            if (patio is null) throw new Exception("P·tio n„o encontrado");
 
-            // Atualizar propriedades usando reflection ou m√©todos espec√≠ficos
+            // Atualizar propriedades usando reflection ou mÈtodos especÌficos
             var updatedPatio = new Patio(dto.Nome, dto.Endereco);
             _context.Entry(patio).CurrentValues.SetValues(updatedPatio);
             await _context.SaveChangesAsync();
@@ -54,7 +54,7 @@ namespace Mottu.API.Services
         public async Task DeleteAsync(int id)
         {
             var patio = await _context.Patios.FindAsync(id);
-            if (patio is null) throw new Exception("P√°tio n√£o encontrado");
+            if (patio is null) throw new Exception("P·tio n„o encontrado");
             _context.Patios.Remove(patio);
             await _context.SaveChangesAsync();
         }
@@ -65,7 +65,7 @@ namespace Mottu.API.Services
                 .Include(p => p.Motos)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
-            if (patio is null) throw new Exception("P√°tio n√£o encontrado");
+            if (patio is null) throw new Exception("P·tio n„o encontrado");
 
             var status = new
             {
@@ -82,3 +82,4 @@ namespace Mottu.API.Services
         }
     }
 }
+

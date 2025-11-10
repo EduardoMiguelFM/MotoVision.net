@@ -1,16 +1,19 @@
-Ôªøusing System.ComponentModel.DataAnnotations;
-using Mottu.Domain.Enums;
-using Mottu.Domain.ValueObjects;
+using System;
+using System.ComponentModel.DataAnnotations;
+using MotoVision.Domain.Enums;
+using MotoVision.Domain.ValueObjects;
 
-namespace Mottu.Domain.Entities
+
+
+namespace MotoVision.Domain.Entities
 {
     /// <summary>
-    /// Representa uma moto no sistema de compartilhamento da Mottu
+    /// Representa uma moto no sistema de compartilhamento da MotoVision
     /// </summary>
     public class Moto
     {
         /// <summary>
-        /// Identificador √∫nico da moto
+        /// Identificador ˙nico da moto
         /// </summary>
         public int Id { get; private set; }
 
@@ -30,21 +33,22 @@ namespace Mottu.Domain.Entities
         public StatusMoto Status { get; private set; }
 
         /// <summary>
-        /// Setor e cor onde a moto est√° localizada (calculado automaticamente baseado no status)
+        /// Setor e cor onde a moto est· localizada (calculado automaticamente baseado no status)
         /// </summary>
         public SetorCor SetorCor { get; private set; } = default!;
 
         /// <summary>
-        /// ID do p√°tio onde a moto est√° localizada
+        /// ID do p·tio onde a moto est· localizada
         /// </summary>
         public int PatioId { get; private set; }
 
         /// <summary>
-        /// P√°tio onde a moto est√° localizada
+        /// P·tio onde a moto est· localizada
         /// </summary>
         public Patio Patio { get; private set; } = default!;
 
         private Moto() { } // EF
+
         internal Moto(string modelo, Placa placa, Patio patio)
         {
             Modelo = modelo;
@@ -57,7 +61,7 @@ namespace Mottu.Domain.Entities
         public void DefinirStatus(StatusMoto novoStatus)
         {
             if (Status == StatusMoto.SINISTRO && novoStatus != StatusMoto.SINISTRO)
-                throw new InvalidOperationException("Moto em SINISTRO n√£o pode mudar de status.");
+                throw new InvalidOperationException("Moto em SINISTRO n„o pode mudar de status.");
 
             Status = novoStatus;
             SetorCor = SetorCor.FromStatus(novoStatus);
@@ -65,9 +69,12 @@ namespace Mottu.Domain.Entities
 
         public void MoverPara(Patio novoPatio)
         {
-            if (novoPatio is null) throw new ArgumentNullException(nameof(novoPatio));
+            if (novoPatio is null)
+                throw new ArgumentNullException(nameof(novoPatio));
+
             Patio = novoPatio;
             PatioId = novoPatio.Id;
         }
     }
 }
+

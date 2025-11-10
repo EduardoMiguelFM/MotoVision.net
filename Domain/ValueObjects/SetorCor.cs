@@ -1,13 +1,18 @@
-﻿using Mottu.Domain.Enums;
+using MotoVision.Domain.Enums;
 
-namespace Mottu.Domain.ValueObjects
+namespace MotoVision.Domain.ValueObjects
 {
     public sealed class SetorCor
     {
         public string Setor { get; }
         public string Cor { get; }
+
         private SetorCor() { } // EF
-        private SetorCor(string setor, string cor) { Setor = setor; Cor = cor; }
+        private SetorCor(string setor, string cor)
+        {
+            Setor = setor;
+            Cor = cor;
+        }
 
         public static SetorCor FromStatus(StatusMoto status) => status switch
         {
@@ -22,3 +27,4 @@ namespace Mottu.Domain.ValueObjects
         };
     }
 }
+

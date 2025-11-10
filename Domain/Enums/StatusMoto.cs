@@ -1,16 +1,16 @@
-ï»¿using System.ComponentModel;
+using System.ComponentModel;
 
-namespace Mottu.Domain.Enums
+namespace MotoVision.Domain.Enums
 {
     /// <summary>
-    /// Status possÃ­veis para uma moto no sistema
+    /// Status possíveis para uma moto no sistema
     /// </summary>
     public enum StatusMoto
     {
         /// <summary>
-        /// Moto disponÃ­vel para locaÃ§Ã£o (Setor A - Verde)
+        /// Moto disponível para locação (Setor A - Verde)
         /// </summary>
-        [Description("DisponÃ­vel para locaÃ§Ã£o")]
+        [Description("Disponível para locação")]
         DISPONIVEL,
 
         /// <summary>
@@ -20,21 +20,21 @@ namespace Mottu.Domain.Enums
         RESERVADA,
 
         /// <summary>
-        /// Moto em manutenÃ§Ã£o (Setor C - Amarelo)
+        /// Moto em manutenção (Setor C - Amarelo)
         /// </summary>
-        [Description("Em manutenÃ§Ã£o")]
+        [Description("Em manutenção")]
         MANUTENCAO,
 
         /// <summary>
-        /// Moto aguardando peÃ§as para manutenÃ§Ã£o (Setor D - Laranja)
+        /// Moto aguardando peças para manutenção (Setor D - Laranja)
         /// </summary>
-        [Description("Aguardando peÃ§as")]
+        [Description("Aguardando peças")]
         FALTA_PECA,
 
         /// <summary>
-        /// Moto temporariamente indisponÃ­vel (Setor E - Cinza)
+        /// Moto temporariamente indisponível (Setor E - Cinza)
         /// </summary>
-        [Description("IndisponÃ­vel")]
+        [Description("Indisponível")]
         INDISPONIVEL,
 
         /// <summary>
@@ -50,3 +50,4 @@ namespace Mottu.Domain.Enums
         SINISTRO
     }
 }
+

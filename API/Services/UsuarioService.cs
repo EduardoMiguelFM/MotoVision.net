@@ -1,11 +1,11 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Mottu.Application.DTOs;
-using Mottu.Application.Interfaces;
-using Mottu.Domain.Entities;
-using Mottu.Infrastructure.Data;
+using MotoVision.Application.DTOs;
+using MotoVision.Application.Interfaces;
+using MotoVision.Domain.Entities;
+using MotoVision.Infrastructure.Data;
 
-namespace Mottu.API.Services
+namespace MotoVision.API.Services
 {
     public class UsuarioService : IUsuarioRepository
     {
@@ -70,3 +70,4 @@ namespace Mottu.API.Services
         }
     }
 }
+

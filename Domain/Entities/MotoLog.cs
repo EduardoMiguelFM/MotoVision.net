@@ -1,8 +1,8 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Mottu.Domain.Enums;
+using MotoVision.Domain.Enums;
 
-namespace Mottu.Domain.Entities
+namespace MotoVision.Domain.Entities
 {
     public class MotoLog
     {
@@ -16,3 +16,4 @@ namespace Mottu.Domain.Entities
         public DateTime DataAlteracao { get; set; } = DateTime.UtcNow;
     }
 }
+

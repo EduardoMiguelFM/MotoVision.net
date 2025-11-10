@@ -1,4 +1,4 @@
-namespace Mottu.Infrastructure.Settings
+namespace MotoVision.Infrastructure.Settings
 {
     public class MongoSettings
     {
@@ -6,3 +6,4 @@ namespace Mottu.Infrastructure.Settings
         public string DatabaseName { get; set; } = default!;
     }
 }
+

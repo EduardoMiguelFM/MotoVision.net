@@ -1,6 +1,6 @@
-﻿using Mottu.Application.DTOs;
+using MotoVision.Application.DTOs;
 
-namespace Mottu.Application.Interfaces
+namespace MotoVision.Application.Interfaces
 {
     public interface IPatioRepository
     {
@@ -12,3 +12,4 @@ namespace Mottu.Application.Interfaces
         Task<object> GetStatusAsync(int id);
     }
 }
+

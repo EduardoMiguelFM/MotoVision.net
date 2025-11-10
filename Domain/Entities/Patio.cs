@@ -1,55 +1,77 @@
-Ôªøusing System.ComponentModel.DataAnnotations;
-using Mottu.Domain.ValueObjects;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using MotoVision.Domain.ValueObjects;
 
-namespace Mottu.Domain.Entities
+namespace MotoVision.Domain.Entities
 {
     /// <summary>
-    /// Representa um p√°tio onde as motos ficam estacionadas
+    /// Representa um p·tio onde as motos ficam estacionadas.
     /// </summary>
     public class Patio
     {
         /// <summary>
-        /// Identificador √∫nico do p√°tio
+        /// Identificador ˙nico do p·tio.
         /// </summary>
+        [Key]
         public int Id { get; private set; }
 
         /// <summary>
-        /// Nome do p√°tio (ex: P√°tio Butant√£, P√°tio Vila Madalena)
+        /// Nome do p·tio (ex: P·tio Butant„, P·tio Vila Madalena).
         /// </summary>
-        public string Nome { get; private set; } = default!;
+        [Required]
+        public string Nome { get; private set; } = string.Empty;
 
         /// <summary>
-        /// Endere√ßo completo do p√°tio
+        /// EndereÁo completo do p·tio.
         /// </summary>
-        public string Endereco { get; private set; } = default!;
+        [Required]
+        public string Endereco { get; private set; } = string.Empty;
 
         private readonly List<Moto> _motos = new();
 
         /// <summary>
-        /// Lista de motos estacionadas neste p√°tio
+        /// Lista de motos estacionadas neste p·tio.
         /// </summary>
-        public IReadOnlyCollection<Moto> Motos => _motos;
+        public IReadOnlyCollection<Moto> Motos => _motos.AsReadOnly();
 
-        private Patio() { } // EF
+        private Patio() { } // Construtor protegido para EF
+
         public Patio(string nome, string endereco)
         {
+            if (string.IsNullOrWhiteSpace(nome))
+                throw new ArgumentException("Nome do p·tio È obrigatÛrio.", nameof(nome));
+
+            if (string.IsNullOrWhiteSpace(endereco))
+                throw new ArgumentException("EndereÁo do p·tio È obrigatÛrio.", nameof(endereco));
+
             Nome = nome;
             Endereco = endereco;
         }
 
+        /// <summary>
+        /// Adiciona uma moto ao p·tio, garantindo unicidade pela placa.
+        /// </summary>
         public Moto AdicionarMoto(string modelo, Placa placa)
         {
             if (_motos.Any(m => m.Placa.Equals(placa)))
-                throw new InvalidOperationException("J√° existe moto com essa placa no p√°tio.");
+                throw new InvalidOperationException("J· existe uma moto com essa placa no p·tio.");
+
             var moto = new Moto(modelo, placa, this);
             _motos.Add(moto);
             return moto;
         }
 
+        /// <summary>
+        /// Remove uma moto do p·tio pelo identificador.
+        /// </summary>
         public void RemoverMoto(int motoId)
         {
             var moto = _motos.FirstOrDefault(x => x.Id == motoId);
-            if (moto is null) throw new KeyNotFoundException("Moto n√£o encontrada.");
+            if (moto is null)
+                throw new KeyNotFoundException("Moto n„o encontrada.");
+
             _motos.Remove(moto);
         }
     }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Mottu.Application.DTOs
+namespace MotoVision.Application.DTOs
 {
     /// <summary>
     /// DTO para criação, atualização e consulta de usuários
@@ -49,3 +49,4 @@ namespace Mottu.Application.DTOs
         public string Funcao { get; set; } = default!;
     }
 }
+

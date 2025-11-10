@@ -1,7 +1,7 @@
 
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Mottu.Infrastructure.Documents
+namespace MotoVision.Infrastructure.Documents
 {
     public class PatioDocument
     {
@@ -22,3 +22,4 @@ namespace Mottu.Infrastructure.Documents
         public int PatioId { get; set; }
     }
 }
+
